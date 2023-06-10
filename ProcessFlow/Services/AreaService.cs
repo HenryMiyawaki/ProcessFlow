@@ -1,19 +1,18 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using ProcessFlow.DataAccess;
 using ProcessFlow.Models;
+using ProcessFlow.Services.Interfaces;
 
 namespace ProcessFlow.Services
 {
-    public class AreaService
+    public class AreaService : IAreaService
     {
         private readonly IMongoCollection<AreaModel> _areaCollection;
 
-        public AreaService(IOptions<AreaDatabaseSettings> areaServices)
+        public AreaService(MongoContext mongoDatabaseContext)
         {
-            var mongoClient = new MongoClient(areaServices.Value.ConnectionString);
-            var mongoDatabase = mongoClient.GetDatabase(areaServices.Value.DatabaseName);
-
-            _areaCollection = mongoDatabase.GetCollection<AreaModel>(areaServices.Value.AreaCollectionName);
+            _areaCollection = mongoDatabaseContext.AreaCollection;
         }
 
         public async Task<List<AreaModel>> GetAreasAsync() => 

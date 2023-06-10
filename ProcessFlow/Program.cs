@@ -1,12 +1,15 @@
+using ProcessFlow.DataAccess;
 using ProcessFlow.Models;
 using ProcessFlow.Services;
+using ProcessFlow.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.Configure<AreaDatabaseSettings>(builder.Configuration.GetSection("MongoDbConnection"));
+builder.Services.Configure<ProcessDatabaseSettings>(builder.Configuration.GetSection("MongoDbConnection"));
 
-builder.Services.AddSingleton<AreaService>();
+builder.Services.AddSingleton<MongoContext>();
+builder.Services.AddTransient<IAreaService, AreaService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

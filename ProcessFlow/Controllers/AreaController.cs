@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProcessFlow.Models;
-using ProcessFlow.Services;
+using ProcessFlow.Services.Interfaces;
 
 namespace ProcessFlow.Controllers
 {
@@ -9,9 +9,9 @@ namespace ProcessFlow.Controllers
     [ApiController]
     public class AreaController : ControllerBase
     {
-        private readonly AreaService _areaService;
+        private readonly IAreaService _areaService;
 
-        public AreaController(AreaService areaService)
+        public AreaController(IAreaService areaService)
         {
             _areaService = areaService;
         }
