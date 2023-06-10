@@ -1,16 +1,17 @@
 ﻿using ProcessFlow.Models;
+using ProcessFlow.Models.Dtos;
 
 namespace ProcessFlow.Services.Interfaces
 {
     public interface IAreaService
     {
-        public Task<List<AreaModel>> GetAreasAsync();
+        public Task<List<AreaDto>> GetAreasAsync();
 
-        public Task<AreaModel> GetAreaByIdAsync(string id);
+        public Task<AreaDto> GetAreaByIdAsync(string id);
 
-        public Task CreateAsync(AreaModel area);
+        public Task CreateAsync(AreaDto area);
 
-        public Task UpdateAsync(string id, AreaModel area);
+        public Task UpdateAsync(string id, AreaDto area);
 
         public Task DeleteAsync(string id);
     }
