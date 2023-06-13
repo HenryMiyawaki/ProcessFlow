@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ProcessFlow.Models.Dtos;
 
 namespace ProcessFlow.Models.Profiles
 {
@@ -7,7 +6,7 @@ namespace ProcessFlow.Models.Profiles
     {
         public AreaProfile()
         {
-            CreateMap<AreaDto, AreaModel>()
+            CreateMap<Area, AreaModel>()
                 .ReverseMap();
         }
     }
