@@ -4,6 +4,6 @@ namespace ProcessFlow.Models
 {
     public class ProcessModel : ProcessBaseModel
     {
-        public AreaModel? Area { get; set; }
+        public List<SubProcessModel>? SubProcessModels { get; set; }
     }
 }

@@ -16,10 +16,7 @@ namespace ProcessFlow.DataAccess
 
         public IMongoCollection<AreaModel> AreaCollection =>
             _database.GetCollection<AreaModel>("Area");
-        public IMongoCollection<ProcessModel> ProcessCollection =>
-            _database.GetCollection<ProcessModel>("Process");
-        public IMongoCollection<SubProcessModel> SubProcessCollection =>
-            _database.GetCollection<SubProcessModel>("SubProcess");
+
         public IMongoCollection<OwnerModel> OwnerCollection =>
             _database.GetCollection<OwnerModel>("Owner");
     }

@@ -1,6 +1,6 @@
-﻿namespace ProcessFlow.Models.Dtos
+﻿namespace ProcessFlow.Models
 {
-    public class OwnerDto
+    public class Owner
     {
         public int? Id { get; set; }
         public string? Name { get; set; }

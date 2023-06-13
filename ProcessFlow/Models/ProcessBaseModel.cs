@@ -9,7 +9,7 @@ namespace ProcessFlow.Models
         public string? Id { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
-        public string[]? UsedSystems { get; set; }
-        public OwnerModel[]? Owners { get; set; }
+        public List<string>? UsedSystems { get; set; }
+        public List<OwnerModel> Owners { get; set; }
     }
 }
