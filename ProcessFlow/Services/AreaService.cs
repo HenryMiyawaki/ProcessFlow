@@ -1,84 +1,80 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using ProcessFlow.Controllers.ErrorHandler;
 using ProcessFlow.DataAccess;
 using ProcessFlow.Models;
-using ProcessFlow.Models.Dtos;
 using ProcessFlow.Services.Interfaces;
+using System.Net;
 
 namespace ProcessFlow.Services
 {
     public class AreaService : IAreaService
     {
         private readonly IMongoCollection<AreaModel> _areaCollection;
-        private readonly IMongoCollection<ProcessModel> _processCollection;
-        private readonly IMongoCollection<SubProcessModel> _subprocessCollection;
-        public readonly IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public AreaService(MongoContext mongoDatabaseContext, IMapper mapper)
         {
             _areaCollection = mongoDatabaseContext.AreaCollection;
-            _processCollection = mongoDatabaseContext.ProcessCollection;
-            _subprocessCollection = mongoDatabaseContext.SubProcessCollection;
             _mapper = mapper;
         }
 
-        public async Task<List<AreaDto>> GetAreasAsync()
+        public async Task<List<Area>> GetAreaAsync()
         {
-            var areaModels = await _areaCollection.Find(x => true).ToListAsync();
+            var areaModels = await _areaCollection.Find(_ => true).ToListAsync();
 
-            return _mapper.Map<List<AreaDto>>(areaModels);
+            return _mapper.Map<List<Area>>(areaModels);
         }
 
-        public async Task<AreaDto> GetAreaByIdAsync(string id) 
+        public async Task<Area> GetAreaByIdAsync(string id)
         {
             var areaModel = await _areaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-            return _mapper.Map<AreaDto>(areaModel);
+            if(areaModel == null)
+                throw new NotFoundException("Area not found");
+
+            return _mapper.Map<Area>(areaModel);
         }
 
-        public async Task CreateAsync(AreaDto area)
+        public async Task CreateAreaAsync(Area area)
         {
-            try
+            if (string.IsNullOrEmpty(area.Name))
             {
-                var areaModel = _mapper.Map<AreaModel>(area);
+                throw new BadRequestException("Name is required");
+            }
 
-                await _areaCollection.InsertOneAsync(areaModel);
-            }
-            catch (Exception)
-            {
-                throw new Exception("bad-request");
-            }
+            var areaModel = _mapper.Map<AreaModel>(area);
+
+            await _areaCollection.InsertOneAsync(areaModel);
         }
 
-        public async Task UpdateAsync(string id, AreaDto area)
+        public async Task<Area> UpdateAreaAsync(Area area)
         {
-            try
-            {
-                var areaModel = _mapper.Map<AreaModel>(area);
+            var areaModel = await _areaCollection.Find(x => x.Id == area.Id).FirstOrDefaultAsync();
 
-                await _areaCollection.ReplaceOneAsync(x => x.Id == id, areaModel);
-            }
-            catch(Exception)
+            if (areaModel == null)
             {
-                throw new Exception("bad-request");
+                throw new NotFoundException("Area not found");
             }
+
+            areaModel.Name = area.Name ?? areaModel.Name;
+            areaModel.Description = area.Description ?? areaModel.Description;
+
+            await _areaCollection.ReplaceOneAsync(x => x.Id == area.Id, areaModel);
+
+            return _mapper.Map<Area>(areaModel);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAreaAsync(string id)
         {
-            var processes = await _processCollection.FindAsync(x => x.Area.Id == id);
-
-            await _processCollection.DeleteManyAsync(x => x.Area.Id == id);
-
-            if (processes != null)
-            {
-                await processes.ForEachAsync(x =>
-                {
-                    _subprocessCollection.DeleteManyAsync(y => y.Process.Id == x.Id);
-                });
-            }
+            var existingArea = await _areaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
             
+            if (existingArea == null)
+            {
+                throw new NotFoundException($"Area not found");
+            }
+
             await _areaCollection.DeleteOneAsync(x => x.Id == id);
         }
     }

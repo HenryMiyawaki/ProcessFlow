@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProcessFlow.Models;
-using ProcessFlow.Models.Dtos;
 using ProcessFlow.Services.Interfaces;
 
 namespace ProcessFlow.Controllers
@@ -18,27 +16,44 @@ namespace ProcessFlow.Controllers
         }
 
         [HttpGet]
-        public async Task<List<AreaDto>> GetAreas() =>
-            await _areaService.GetAreasAsync();
+        public async Task<IActionResult> GetArea()
+        {
+            var area = await _areaService.GetAreaAsync();
+
+            return Ok(area);
+        }
 
         [HttpGet("{id}")]
-        public async Task<AreaDto> PostArea([FromRoute] string id) =>
-            await _areaService.GetAreaByIdAsync(id);
+        public async Task<IActionResult> GetAreaById([FromRoute] string id)
+        {
+            var area = await _areaService.GetAreaByIdAsync(id);
+
+            return Ok(area);
+        }
 
         [HttpPost]
-        public async Task<AreaDto> PostArea(AreaDto area)
+        public async Task<IActionResult> PostArea(Area area)
         {
-            await _areaService.CreateAsync(area);
+            await _areaService.CreateAreaAsync(area);
 
-            return area;
+            return Ok(area);
         }
 
         [HttpPut("{id}")]
-        public async Task PutArea([FromRoute] string id, [FromBody] AreaDto area) =>
-            await _areaService.UpdateAsync(id, area);
+        public async Task<IActionResult> PutArea([FromRoute] string id, [FromBody] Area area)
+        {
+            area.Id = id;
+            area = await _areaService.UpdateAreaAsync(area);
+
+            return Ok(area);
+        }
 
         [HttpDelete("{id}")]
-        public async Task DeleteArea([FromRoute] string id) =>
-            await _areaService.DeleteAsync(id);
+        public async Task<IActionResult> DeleteArea([FromRoute] string id)
+        {
+            await _areaService.DeleteAreaAsync(id);
+
+            return Ok();
+        }
     }
 }

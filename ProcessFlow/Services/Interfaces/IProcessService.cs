@@ -4,7 +4,11 @@ namespace ProcessFlow.Services.Interfaces
 {
     public interface IProcessService
     {
-        public Task<List<ProcessModel>> GetProcessAsync();
-        public Task CreateAsync(ProcessModel process);
+        public Task<List<Process>> GetProcessAsync(string areaId);
+        public Task<Process> GetProcessByIdAsync(string areaId, string id);
+        public Task<Process> CreateProcessAsync(Process process);
+        public Task<Process> UpdateProcessAsync(Process process);
+        public Task DeleteProcessAsync(string areaId, string id);
+
     }
 }
