@@ -5,7 +5,6 @@ using ProcessFlow.Controllers.ErrorHandler;
 using ProcessFlow.DataAccess;
 using ProcessFlow.Models;
 using ProcessFlow.Services.Interfaces;
-using System.Net;
 
 namespace ProcessFlow.Services
 {
@@ -31,7 +30,7 @@ namespace ProcessFlow.Services
         {
             var areaModel = await _areaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-            if(areaModel == null)
+            if (areaModel == null)
                 throw new NotFoundException("Area not found");
 
             return _mapper.Map<Area>(areaModel);
@@ -40,9 +39,7 @@ namespace ProcessFlow.Services
         public async Task CreateAreaAsync(Area area)
         {
             if (string.IsNullOrEmpty(area.Name))
-            {
                 throw new BadRequestException("Name is required");
-            }
 
             var areaModel = _mapper.Map<AreaModel>(area);
 
@@ -54,9 +51,7 @@ namespace ProcessFlow.Services
             var areaModel = await _areaCollection.Find(x => x.Id == area.Id).FirstOrDefaultAsync();
 
             if (areaModel == null)
-            {
                 throw new NotFoundException("Area not found");
-            }
 
             areaModel.Name = area.Name ?? areaModel.Name;
             areaModel.Description = area.Description ?? areaModel.Description;
@@ -68,14 +63,10 @@ namespace ProcessFlow.Services
 
         public async Task DeleteAreaAsync(string id)
         {
-            var existingArea = await _areaCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-            
-            if (existingArea == null)
-            {
-                throw new NotFoundException($"Area not found");
-            }
+            var result = await _areaCollection.DeleteOneAsync(x => x.Id == id);
 
-            await _areaCollection.DeleteOneAsync(x => x.Id == id);
+            if (result.DeletedCount == 0)
+                throw new NotFoundException("Area not found");
         }
     }
 }
