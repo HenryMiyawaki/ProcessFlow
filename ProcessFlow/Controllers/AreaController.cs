@@ -18,9 +18,9 @@ namespace ProcessFlow.Controllers
         [HttpGet]
         public async Task<IActionResult> GetArea()
         {
-            var area = await _areaService.GetAreaAsync();
+            var areas = await _areaService.GetAreaAsync();
 
-            return Ok(area);
+            return Ok(areas);
         }
 
         [HttpGet("{id}")]
@@ -43,9 +43,9 @@ namespace ProcessFlow.Controllers
         public async Task<IActionResult> PutArea([FromRoute] string id, [FromBody] Area area)
         {
             area.Id = id;
-            area = await _areaService.UpdateAreaAsync(area);
+            var updatedArea = await _areaService.UpdateAreaAsync(area);
 
-            return Ok(area);
+            return Ok(updatedArea);
         }
 
         [HttpDelete("{id}")]
