@@ -1,3 +1,4 @@
+using ProcessFlow.Controllers.ErrorHandler;
 using ProcessFlow.DataAccess;
 using ProcessFlow.Models;
 using ProcessFlow.Services;
@@ -11,9 +12,13 @@ builder.Services.Configure<ProcessDatabaseSettings>(builder.Configuration.GetSec
 builder.Services.AddSingleton<MongoContext>();
 builder.Services.AddTransient<IAreaService, AreaService>();
 builder.Services.AddTransient<IProcessService, ProcessService>();
-builder.Services.AddTransient<ISubProcessService, SubProcessService>();
+//builder.Services.AddTransient<ISubProcessService, SubProcessService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<CustomExceptionFilterAttribute>();
+});
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
