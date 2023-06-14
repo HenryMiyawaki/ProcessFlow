@@ -82,6 +82,7 @@ namespace ProcessFlow.Services
             subProcessToUpdate.Name = subProcess.Name ?? subProcessToUpdate.Name;
             subProcessToUpdate.Description = subProcess.Description ?? subProcessToUpdate.Description;
             subProcessToUpdate.UsedSystems = subProcess.UsedSystems ?? subProcessToUpdate.UsedSystems;
+            subProcessToUpdate.Owners = subProcess.Owners ?? subProcessToUpdate.Owners;
             subProcessToUpdate.Documentation = subProcess.Documentation ?? subProcessToUpdate.Documentation;
 
             var index = process.SubProcessModels.FindIndex(x => x.Id == subProcessToUpdate.Id);

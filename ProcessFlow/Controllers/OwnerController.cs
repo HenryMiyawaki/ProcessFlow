@@ -16,15 +16,23 @@ namespace ProcessFlow.Controllers
         }
 
         [HttpGet]
-        public async Task<List<OwnerModel>> GetOwner() =>
-            await _ownerService.GetOwnerAsync();
+        public async Task<IActionResult> GetOwner()
+        {
+            var owners = await _ownerService.GetOwnerAsync();
+
+            return Ok(owners);
+        }
 
         [HttpGet("{id}")]
-        public async Task<OwnerModel> GetOwnerById([FromRoute] string id) =>
-            await _ownerService.GetOwnerByIdAsync(id);
+        public async Task<IActionResult> GetOwnerById([FromRoute] string id)
+        {
+            var owner = await _ownerService.GetOwnerByIdAsync(id);
+
+            return Ok(owner);
+        }
 
         [HttpPost]
-        public async Task<OwnerModel> PostOwner(OwnerModel owner)
+        public async Task<Owner> PostOwner(Owner owner)
         {
             await _ownerService.CreateAsync(owner);
 
@@ -32,11 +40,20 @@ namespace ProcessFlow.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task PutOwner([FromRoute] string id, [FromBody] OwnerModel owner) =>
-            await _ownerService.UpdateAsync(id, owner);
+        public async Task<IActionResult> PutOwner([FromRoute] string id, [FromBody] Owner owner)
+        {
+            owner.Id = id;
+            var updatedArea = await _ownerService.UpdateAsync(owner);
+
+            return Ok(updatedArea);
+        }
 
         [HttpDelete("{id}")]
-        public async Task DeleteOwner([FromRoute] string id) =>
+        public async Task<IActionResult> DeleteOwner([FromRoute] string id)
+        {
             await _ownerService.DeleteAsync(id);
+
+            return Ok();
+        }
     }
 }

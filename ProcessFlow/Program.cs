@@ -13,6 +13,7 @@ builder.Services.AddSingleton<MongoContext>();
 builder.Services.AddTransient<IAreaService, AreaService>();
 builder.Services.AddTransient<IProcessService, ProcessService>();
 builder.Services.AddTransient<ISubProcessService, SubProcessService>();
+builder.Services.AddTransient<IOwnerService, OwnerService>();
 
 builder.Services.AddControllers(options =>
 {
