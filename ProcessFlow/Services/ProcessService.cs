@@ -39,20 +39,19 @@ namespace ProcessFlow.Services
             if (area.ProcessModels == null)
                 throw new NotFoundException("Process not found");
 
-            var processModel = area.ProcessModels.Where(x => x.Id == id).FirstOrDefault();
+            var processModel = area.ProcessModels.SingleOrDefault(x => x.Id == id);
 
             if (processModel == null)
                 throw new NotFoundException("Process not found");
 
             return _mapper.Map<Process>(processModel);
-
         }
 
         public async Task<Process> CreateProcessAsync(Process process)
         {
-            if (process.Name == null ||  process.Owners == null || process.AreaId == null || !process.Owners.Any())
+            if (process.Name == null || process.AreaId == null)
             {
-                throw new BadRequestException("Name, AreaId and Owners are required");
+                throw new BadRequestException("Name and AreaId are required");
             }
 
             var area = await _areaService.GetAreaByIdAsync(process.AreaId);
@@ -79,7 +78,7 @@ namespace ProcessFlow.Services
             if (area.ProcessModels == null)
                 throw new NotFoundException("Process not found");
 
-            var processToUpdate = area.ProcessModels.Where(x => x.Id == process.Id).SingleOrDefault();
+            var processToUpdate = area.ProcessModels.SingleOrDefault(x => x.Id == process.Id);
 
             if(processToUpdate == null)
                 throw new NotFoundException("Process not found");
@@ -87,6 +86,7 @@ namespace ProcessFlow.Services
             processToUpdate.Name = process.Name ?? processToUpdate.Name;
             processToUpdate.Description = process.Description ?? processToUpdate.Description;
             processToUpdate.UsedSystems = process.UsedSystems ?? processToUpdate.UsedSystems;
+            processToUpdate.SubProcessModels = process.SubProcessModels ?? processToUpdate.SubProcessModels;
 
             var index = area.ProcessModels.FindIndex(x => x.Id == processToUpdate.Id);
             area.ProcessModels[index] = processToUpdate;
@@ -105,7 +105,7 @@ namespace ProcessFlow.Services
             if (area.ProcessModels == null)
                 throw new NotFoundException("Process not found");
 
-            var processToRemove = area.ProcessModels.Where(x => x.Id == id).SingleOrDefault();
+            var processToRemove = area.ProcessModels.SingleOrDefault(x => x.Id == id);
 
             if (processToRemove == null)
                 throw new NotFoundException("Process not found");

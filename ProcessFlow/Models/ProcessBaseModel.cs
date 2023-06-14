@@ -10,6 +10,6 @@ namespace ProcessFlow.Models
         public string Name { get; set; }
         public string? Description { get; set; }
         public List<string>? UsedSystems { get; set; }
-        public List<OwnerModel> Owners { get; set; }
+        public List<OwnerModel>? Owners { get; set; }
     }
 }
