@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProcessFlow.Models.Dtos;
+using ProcessFlow.Models;
 using ProcessFlow.Services.Interfaces;
 
 namespace ProcessFlow.Controllers
@@ -16,16 +16,65 @@ namespace ProcessFlow.Controllers
             _subProcessService = subProcessService;
         }
 
-        [HttpGet]
-        public async Task<List<SubProcessDto>> GetSubProcess() =>
-            await _subProcessService.GetSubProcessAsync();
-
-        [HttpPost]
-        public async Task<SubProcessDto> PostArea(SubProcessDto subProcess)
+        [HttpGet("{areaId}/{processId}")]
+        public async Task<IActionResult> GetSubProcess([FromRoute] string areaId, [FromRoute] string processId)
         {
+            var subProcesses = await _subProcessService.GetSubProcessAsync(areaId, processId);
+
+            return Ok(subProcesses);
+        }
+
+        [HttpGet("{areaId}/{processId}/{id}")]
+        public async Task<IActionResult> GetSubProcess(
+            [FromRoute] string areaId, 
+            [FromRoute] string processId, 
+            [FromRoute] string id)
+        {
+
+            var subProcess = await _subProcessService.GetSubProcessByIdAsync(areaId, processId, id);
+
+            return Ok(subProcess);
+        }
+
+        [HttpPost("{areaId}/{processId}")]
+        public async Task<IActionResult> PostSubProcess(
+            [FromRoute] string areaId, 
+            [FromRoute] string processId, 
+            SubProcess subProcess)
+        {
+            subProcess.AreaId = areaId;
+            subProcess.ProcessId = processId;
+
             await _subProcessService.CreateAsync(subProcess);
 
-            return subProcess;
+            return Ok(subProcess);
+        }
+
+        [HttpPut("{areaId}/{processId}/{id}")]
+        public async Task<IActionResult> PutSubProcess(
+            [FromRoute] string areaId, 
+            [FromRoute] string processId, 
+            [FromRoute] string id, 
+            [FromBody] SubProcess subProcess)
+        {
+            subProcess.AreaId = areaId;
+            subProcess.ProcessId = processId;
+            subProcess.Id = id;
+
+            var subProcessReturn = await _subProcessService.UpdateAsync(subProcess);
+
+            return Ok(subProcessReturn);
+        }
+
+        [HttpDelete("{areaId}/{processId}/{id}")]
+        public async Task<IActionResult> DeleteSubProcess(
+            [FromRoute] string areaId,
+            [FromRoute] string processId,
+            [FromRoute] string id)
+        {
+            await _subProcessService.DeleteAsync(areaId, processId, id);
+
+            return Ok();
         }
     }
 }
