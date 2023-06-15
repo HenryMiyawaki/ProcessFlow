@@ -7,6 +7,8 @@ namespace ProcessFlow.Services.Interfaces
 
         public Task<Area> GetAreaByIdAsync(string id);
 
+        public Task<Area> GetAreaByNameAsync(string name);
+
         public Task CreateAreaAsync(Area area);
 
         public Task<Area> UpdateAreaAsync(Area area);

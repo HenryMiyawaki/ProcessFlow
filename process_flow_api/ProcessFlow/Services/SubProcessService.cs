@@ -21,16 +21,16 @@ namespace ProcessFlow.Services
             _mapper = mapper;
         }
 
-        public async Task<List<SubProcess>> GetSubProcessAsync(string areaId, string processId)
+        public async Task<List<SubProcess>> GetSubProcessAsync(string areaName, string processId)
         {
-            var process = await _processService.GetProcessByIdAsync(areaId, processId);
+            var process = await _processService.GetProcessByIdAsync(areaName, processId);
             
             return _mapper.Map<List<SubProcess>>(process.SubProcessModels);
         }
 
-        public async Task<SubProcess> GetSubProcessByIdAsync(string areaId, string processId, string id)
+        public async Task<SubProcess> GetSubProcessByIdAsync(string areaName, string processId, string id)
         {
-            var process = await _processService.GetProcessByIdAsync(areaId, processId);
+            var process = await _processService.GetProcessByIdAsync(areaName, processId);
 
             if (process.SubProcessModels == null)
                 throw new NotFoundException("Sub process not found");
@@ -45,10 +45,10 @@ namespace ProcessFlow.Services
 
         public async Task<SubProcess> CreateAsync(SubProcess subProcess)
         {
-            if (String.IsNullOrEmpty(subProcess.AreaId) || String.IsNullOrEmpty(subProcess.ProcessId))
-                throw new BadRequestException("AreaId and processId are required");
+            if (String.IsNullOrEmpty(subProcess.AreaName) || String.IsNullOrEmpty(subProcess.ProcessId))
+                throw new BadRequestException("AreaName and processId are required");
 
-            var process = await _processService.GetProcessByIdAsync(subProcess.AreaId, subProcess.ProcessId);
+            var process = await _processService.GetProcessByIdAsync(subProcess.AreaName, subProcess.ProcessId);
             
             subProcess.Id = ObjectId.GenerateNewId().ToString();
 
@@ -57,7 +57,7 @@ namespace ProcessFlow.Services
 
             process.SubProcessModels.Add(_mapper.Map<SubProcessModel>(subProcess));
 
-            process.AreaId = subProcess.AreaId;
+            process.AreaName = subProcess.AreaName;
 
             await _processService.UpdateProcessAsync(process);
 
@@ -66,10 +66,10 @@ namespace ProcessFlow.Services
 
         public async Task<SubProcess> UpdateAsync(SubProcess subProcess)
         {
-            if (String.IsNullOrEmpty(subProcess.AreaId) || String.IsNullOrEmpty(subProcess.ProcessId))
-                throw new BadRequestException("AreaId and processId are required");
+            if (String.IsNullOrEmpty(subProcess.AreaName) || String.IsNullOrEmpty(subProcess.ProcessId))
+                throw new BadRequestException("AreaName and processId are required");
 
-            var process = await _processService.GetProcessByIdAsync(subProcess.AreaId, subProcess.ProcessId);
+            var process = await _processService.GetProcessByIdAsync(subProcess.AreaName, subProcess.ProcessId);
 
             if (process.SubProcessModels == null)
                 throw new NotFoundException("Sub Process not found");
@@ -82,22 +82,22 @@ namespace ProcessFlow.Services
             subProcessToUpdate.Name = subProcess.Name ?? subProcessToUpdate.Name;
             subProcessToUpdate.Description = subProcess.Description ?? subProcessToUpdate.Description;
             subProcessToUpdate.UsedSystems = subProcess.UsedSystems ?? subProcessToUpdate.UsedSystems;
-            subProcessToUpdate.Owners = subProcess.Owners ?? subProcessToUpdate.Owners;
+            subProcessToUpdate.OwnersIds = subProcess.OwnersIds ?? subProcessToUpdate.OwnersIds;
             subProcessToUpdate.Documentation = subProcess.Documentation ?? subProcessToUpdate.Documentation;
 
             var index = process.SubProcessModels.FindIndex(x => x.Id == subProcessToUpdate.Id);
             process.SubProcessModels[index] = subProcessToUpdate;
 
-            process.AreaId = subProcess.AreaId;
+            process.AreaName = subProcess.AreaName;
 
             await _processService.UpdateProcessAsync(process);
             
             return _mapper.Map<SubProcess>(subProcessToUpdate);
         }
 
-        public async Task DeleteAsync(string areaId, string processId, string id)
+        public async Task DeleteAsync(string areaName, string processId, string id)
         {
-            var process = await _processService.GetProcessByIdAsync(areaId, processId);
+            var process = await _processService.GetProcessByIdAsync(areaName, processId);
 
             if (process.SubProcessModels == null)
                 throw new NotFoundException("Sub process not found");
@@ -109,7 +109,7 @@ namespace ProcessFlow.Services
 
             process.SubProcessModels.Remove(subProcessToRemove);
 
-            process.AreaId = areaId;
+            process.AreaName = areaName;
 
             await _processService.UpdateProcessAsync(process);
         }

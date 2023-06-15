@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AreaModel } from 'src/app/models/AreaModel';
 import { AreaService } from '../../../services/AreaService';
 import { FontAwesome } from '../../utils/font-awesome';
@@ -16,7 +16,8 @@ export class AreaDetailsComponent implements OnInit {
 
   constructor(
     private areaService: AreaService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -24,14 +25,22 @@ export class AreaDetailsComponent implements OnInit {
 
     if (this.id != null) {
       this.areaService.getAreaById(this.id).subscribe((area) => {
-        console.log(area);
-
         this.area = area;
       });
     }
   }
 
-  getTitleId() {
-    return this.id != null ? '# ' + this.id : null;
+  submit() {
+    if (this.id != null) {
+      this.areaService.updateArea(this.id, this.area).subscribe();
+    } else {
+      this.areaService.createArea(this.area).subscribe((area) => {
+        this.router.navigate(['/areas']);
+      });
+    }
+  }
+
+  getTitleMethod() {
+    return !this.id ? 'Create' : 'Edit';
   }
 }

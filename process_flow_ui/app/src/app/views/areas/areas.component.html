@@ -1,12 +1,11 @@
-<h5>
+<h6>
   <fa-icon [icon]="icons.faLayerGroup"></fa-icon>
-  Area
-</h5>
+  Areas
+</h6>
 
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">#Id</th>
       <th scope="col">Name</th>
       <th scope="col">Description</th>
       <th scope="col">Actions</th>
@@ -14,17 +13,37 @@
   </thead>
   <tbody>
     <tr *ngFor="let area of areas">
-      <th class="col col-3" scope="row">{{ area.id }}</th>
-      <td class="col col-3">{{ area.name }}</td>
-      <td class="col col-3">{{ area.description }}</td>
-      <td class="col col-3">
+      <th class="col col-4">{{ area.name }}</th>
+      <td class="col col-4">{{ area.description }}</td>
+      <td class="col col-4">
         <div>
           <a [routerLink]="['/area', area.id]" class="me-3">
             <fa-icon [icon]="icons.faTools"></fa-icon>
           </a>
-          <fa-icon [icon]="icons.faTrash"></fa-icon>
+          <button class="btn" (click)="openDeleteConfirmationModal(area.id)">
+            <fa-icon [icon]="icons.faTrash"></fa-icon>
+          </button>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="4">
+        <div class="d-flex justify-content-center">
+          <a [routerLink]="['/area']" class="me-3">
+            <fa-icon [icon]="icons.faAdd"></fa-icon>
+          </a>
         </div>
       </td>
     </tr>
   </tbody>
 </table>
+
+<app-confirm-modal
+  #deleteConfirmationModal
+  [title]="'Delete Confirmation'"
+  [message]="'Are you sure you want to delete?'"
+  [confirmButtonText]="'Delete'"
+  (confirmEmitter)="handleConfirmDelete()"
+  (cancelEmitter)="handleCancelDelete()"
+></app-confirm-modal>

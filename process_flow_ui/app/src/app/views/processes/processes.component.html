@@ -1,0 +1,82 @@
+<h5 class="mb-5">
+  <a *ngIf="areaId != null" [routerLink]="['/area', areaId]"
+    ><fa-icon class="fa-lg" [icon]="icons.faCircleArrowLeft"></fa-icon
+  ></a>
+  {{ getBackPageText() }}Processes
+</h5>
+
+<div *ngIf="areaId == null" class="row mb-5">
+  <div class="col-6">
+    <label class="mb-2" for="areaName">Area Name</label>
+    <div class="row">
+      <div class="col-7">
+        <input
+          [(ngModel)]="areaName"
+          type="text"
+          class="form-control"
+          id="areaName"
+          name="areaName"
+          placeholder="Type the name"
+        />
+      </div>
+      <div class="col-5">
+        <button class="btn" (click)="searchProcesses()">
+          <fa-icon [icon]="icons.faMagnifyingGlass"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h6>
+  <fa-icon [icon]="icons.faArrowsRotate"></fa-icon>
+  Processes
+</h6>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let process of processes">
+      <th class="col col-4">{{ process.name }}</th>
+      <td class="col col-4">{{ process.description }}</td>
+      <td class="col col-4">
+        <div>
+          <a [routerLink]="['/process', areaId, process.id]" class="me-3">
+            <fa-icon [icon]="icons.faTools"></fa-icon>
+          </a>
+          <button class="btn" (click)="openDeleteConfirmationModal(process.id)">
+            <fa-icon [icon]="icons.faTrash"></fa-icon>
+          </button>
+        </div>
+      </td>
+    </tr>
+
+    <tr *ngIf="areaName">
+      <td colspan="4">
+        <div class="d-flex justify-content-center">
+          <a
+            [routerLink]="['/process', { areaId: areaId, areaName: areaName }]"
+            class="me-3"
+          >
+            <fa-icon [icon]="icons.faAdd"></fa-icon>
+          </a>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<app-confirm-modal
+  #deleteConfirmationModal
+  [title]="'Delete Confirmation'"
+  [message]="'Are you sure you want to delete?'"
+  [confirmButtonText]="'Delete'"
+  (confirmEmitter)="handleConfirmDelete()"
+  (cancelEmitter)="handleCancelDelete()"
+></app-confirm-modal>

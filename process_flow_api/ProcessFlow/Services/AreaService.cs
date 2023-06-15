@@ -36,6 +36,16 @@ namespace ProcessFlow.Services
             return _mapper.Map<Area>(areaModel);
         }
 
+        public async Task<Area> GetAreaByNameAsync(string name)
+        {
+            var areaModel = await _areaCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
+
+            if (areaModel == null)
+                throw new NotFoundException("Area not found");
+
+            return _mapper.Map<Area>(areaModel);
+        }
+
         public async Task CreateAreaAsync(Area area)
         {
             if (string.IsNullOrEmpty(area.Name))

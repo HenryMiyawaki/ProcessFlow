@@ -25,9 +25,9 @@ namespace ProcessFlow.Services
             _mapper = mapper;
         }
 
-        public async Task<List<Process>> GetProcessAsync(string areaId)
+        public async Task<List<Process>> GetProcessAsync(string areaName)
         {
-            var area = await _areaService.GetAreaByIdAsync(areaId);
+            var area = await _areaService.GetAreaByNameAsync(areaName);
 
             return _mapper.Map<List<Process>>(area.ProcessModels) ?? new List<Process>();
         }
@@ -44,7 +44,11 @@ namespace ProcessFlow.Services
             if (processModel == null)
                 throw new NotFoundException("Process not found");
 
-            return _mapper.Map<Process>(processModel);
+            var process = _mapper.Map<Process>(processModel);
+
+            process.AreaName = area.Name;
+
+            return process;
         }
 
         public async Task<Process> CreateProcessAsync(Process process)
@@ -86,7 +90,7 @@ namespace ProcessFlow.Services
             processToUpdate.Name = process.Name ?? processToUpdate.Name;
             processToUpdate.Description = process.Description ?? processToUpdate.Description;
             processToUpdate.UsedSystems = process.UsedSystems ?? processToUpdate.UsedSystems;
-            processToUpdate.Owners = process.Owners ?? processToUpdate.Owners;
+            processToUpdate.OwnersIds = process.OwnersIds ?? processToUpdate.OwnersIds;
             processToUpdate.SubProcessModels = process.SubProcessModels ?? processToUpdate.SubProcessModels;
 
             var index = area.ProcessModels.FindIndex(x => x.Id == processToUpdate.Id);

@@ -16,10 +16,10 @@ namespace ProcessFlow.Controllers
             _processService = processService;
         }
 
-        [HttpGet("{areaId}")]
-        public async Task<IActionResult> GetProcess([FromRoute] string areaId)
+        [HttpGet("{areaName}")]
+        public async Task<IActionResult> GetProcess([FromRoute] string areaName)
         {
-            var processes = await _processService.GetProcessAsync(areaId);
+            var processes = await _processService.GetProcessAsync(areaName);
 
             return Ok(processes);
         }

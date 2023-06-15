@@ -8,25 +8,27 @@ import { AreaModel } from '../models/AreaModel';
   providedIn: 'root',
 })
 export class AreaService {
+  private apiUrl: string = `${environment.apiUrlBase}/Area`;
+
   constructor(private http: HttpClient) {}
 
   getAreas(): Observable<AreaModel[]> {
-    return this.http.get<AreaModel[]>(`${environment.apiUrl}`);
+    return this.http.get<AreaModel[]>(`${this.apiUrl}`);
   }
 
   getAreaById(id: string): Observable<AreaModel> {
-    return this.http.get<AreaModel>(`${environment.apiUrl}/${id}`);
+    return this.http.get<AreaModel>(`${this.apiUrl}/${id}`);
   }
 
   createArea(area: AreaModel): Observable<AreaModel> {
-    return this.http.post<AreaModel>(`${environment.apiUrl}`, area);
+    return this.http.post<AreaModel>(`${this.apiUrl}`, area);
   }
 
   updateArea(id: string, area: AreaModel): Observable<AreaModel> {
-    return this.http.put<AreaModel>(`${environment.apiUrl}/${id}`, area);
+    return this.http.put<AreaModel>(`${this.apiUrl}/${id}`, area);
   }
 
   deleteArea(id: string): Observable<void> {
-    return this.http.delete<void>(`${environment.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

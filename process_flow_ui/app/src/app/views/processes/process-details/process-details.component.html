@@ -1,8 +1,18 @@
 <h5 class="mb-5">
-  <a [routerLink]="['/areas']"
+  <a
+    *ngIf="this.areaName == null"
+    [routerLink]="[
+      '/processes',
+      { id: this.areaId, name: this.process.areaName }
+    ]"
     ><fa-icon class="fa-lg" [icon]="icons.faCircleArrowLeft"></fa-icon
   ></a>
-  Area {{ getTitleMethod() }}
+  <a
+    *ngIf="this.areaName != null"
+    [routerLink]="['/processes', { id: this.areaId, name: this.areaName }]"
+    ><fa-icon class="fa-lg" [icon]="icons.faCircleArrowLeft"></fa-icon
+  ></a>
+  Process {{ getTitleMethod() }}
 </h5>
 
 <form>
@@ -11,7 +21,7 @@
       <div class="form-group">
         <label class="mb-3" for="name">Name</label>
         <input
-          [(ngModel)]="area.name"
+          [(ngModel)]="process.name"
           type="text"
           class="form-control"
           id="name"
@@ -24,7 +34,7 @@
       <div class="form-group">
         <label class="mb-3" for="description">Description</label>
         <input
-          [(ngModel)]="area.description"
+          [(ngModel)]="process.description"
           type="text"
           class="form-control"
           id="description"
@@ -37,7 +47,7 @@
   <div class="d-flex justify-content-between mt-3">
     <div>
       <a
-        [routerLink]="['/processes', { id: this.id, name: this.area.name }]"
+        [routerLink]="['/processes', this.id, this.process.name]"
         *ngIf="this.id"
         type="submit"
         class="btn btn-primary"
