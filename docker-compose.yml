@@ -1,0 +1,5 @@
+services:
+  ui:
+    build: ./process_flow_ui
+    ports:
+      - "4200:4200"

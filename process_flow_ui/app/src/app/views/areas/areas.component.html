@@ -1,0 +1,27 @@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let area of areas">
+            <th class="col col-3" scope="row">{{ area.id }}</th>
+            <td class="col col-3">{{ area.name }}</td>
+            <td class="col col-3">{{ area.description }}</td>
+            <td class="col col-3">
+                <div>
+                    <a [routerLink]="['/area', '2']">
+                        <fa-icon [icon]="icons.faTools"></fa-icon>                        
+                    </a>
+                    <fa-icon class="ms-4 me-4" [icon]="icons.faAdd"></fa-icon>
+                    <fa-icon [icon]="icons.faTrash"></fa-icon>    
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
