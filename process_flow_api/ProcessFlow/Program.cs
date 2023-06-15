@@ -6,6 +6,12 @@ using ProcessFlow.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
+{
+    build.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+}));
+
+
 // Add services to the container.
 builder.Services.Configure<ProcessDatabaseSettings>(builder.Configuration.GetSection("MongoDbConnection"));
 
@@ -35,10 +41,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("corspolicy");
+
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.MapControllers();
+
+app.UseAuthorization();
 
 app.Run();
