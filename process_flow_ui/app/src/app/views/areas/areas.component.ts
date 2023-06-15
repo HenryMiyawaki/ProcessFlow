@@ -6,22 +6,21 @@ import { FontAwesome } from '../utils/font-awesome';
 @Component({
   selector: 'app-areas',
   templateUrl: './areas.component.html',
-  styleUrls: ['./areas.component.scss']
+  styleUrls: ['./areas.component.scss'],
 })
-
 export class AreasComponent implements OnInit {
-
   areas: AreaModel[] = [];
-  icons = new FontAwesome()
+  icons = new FontAwesome();
 
-  constructor(private areaService: AreaService) { }
+  constructor(private areaService: AreaService) {}
 
   ngOnInit(): void {
     this.getAreas();
   }
 
   getAreas(): void {
-    this.areas = this.areaService.getAreas();
+    this.areaService.getAreas().subscribe((areas) => {
+      this.areas = areas;
+    });
   }
-
 }
